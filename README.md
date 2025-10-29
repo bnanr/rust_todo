@@ -3,3 +3,5 @@
 - Adding tasks with priority
 - Remove existing tasks
 - Change progress and proirity of tasks
+- File persistance
+- Error handling
