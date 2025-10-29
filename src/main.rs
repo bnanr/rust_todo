@@ -1,11 +1,16 @@
 use std::process::{self};
+use serde::{Serialize, Deserialize};
+use std::fs;
+use std::io::{self};
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Task {
     desc : String,
     progress : TaskStatus,
     prio : i32,
 }
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 enum TaskStatus {
     Done,
     InProgress,
@@ -13,7 +18,7 @@ enum TaskStatus {
 }
 
 fn main() {
-    let mut tasks = Vec::<Task>::new();
+    let mut tasks = load_tasks();
     
     loop {
         println!("What do you want to do?\nS : Show the Task list\nC : Create a new task\nD : Delete a task\nU : Update a task\nE : Exit");
@@ -31,7 +36,27 @@ fn main() {
             "e" => exit(),
             _ => println!("Unknown command, try again."),
         }
+        match save_tasks(&tasks) {
+            Ok(()) => println!("Successfully saved to file!"),
+            Err(_) => println!("Could not save to file!"),
+        }
     }
+}
+
+fn load_tasks() -> Vec<Task> {
+    let path = "tasks.json";
+    // If the file exists, read it
+    if let Ok(data) = fs::read_to_string(path) {
+        serde_json::from_str(&data).unwrap_or_else(|_| Vec::new())
+    } else {
+        Vec::new()
+    }
+}
+
+fn save_tasks(tasks: &Vec<Task>) -> io::Result<()> {
+    let json = serde_json::to_string_pretty(tasks)?;
+    fs::write("tasks.json", json)?;
+    Ok(())
 }
 
 fn create_task(tasks: &mut Vec<Task>) {
