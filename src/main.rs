@@ -101,6 +101,14 @@ fn update_task(tasks: &mut Vec<Task>) {
             "p" => tasks[index].progress = TaskStatus::Pending,
             _ => println!("Unknown command, try again."),
         }
+        println!("What's the new priority of {}?", tasks[index].desc);
+        let prio = {
+            let mut line = String::new();
+            std::io::stdin().read_line(&mut line).unwrap();
+            line.trim().to_lowercase()
+        };
+        let new_prio = prio.parse::<i32>().unwrap();
+        tasks[index].prio = new_prio;
         println!("Task updated!")
     }
     else {
