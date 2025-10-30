@@ -75,7 +75,7 @@ fn main() {
 
     loop {
         println!(
-            "\nWhat do you want to do?\nS: Show Task list\nC: Create a new task\nD: Delete a task\nU: Update a task\nE: Exit"
+            "\nWhat do you want to do?\nS: Show Task list\nC: Create a new task\nD: Delete a task\nU: Update a task\nE: Exit the application"
         );
 
         let command = match read_line_input() {
